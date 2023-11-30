@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\BookingDatesFreeRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBookingRequest extends FormRequest
@@ -22,8 +23,17 @@ class StoreBookingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'from' => 'required|date|after_or_equal:today',
-            'to' => 'required|date|after_or_equal:from',
+            'from' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+                new BookingDatesFreeRule()
+            ],
+            'to' => [
+                'required',
+                'date',
+                'after_or_equal:from',
+            ],
             'reg_plate' => [
                 'required',
                 'regex:[A-Z]{2}[0-9]{2} [A-Z]{3}'

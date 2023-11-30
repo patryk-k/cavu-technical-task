@@ -2,9 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterval;
+use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
+use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -30,4 +34,36 @@ class Booking extends Model
         'from' => 'datetime:Y-m-d',
         'to' => 'datetime:Y-m-d',
     ];
+
+    /**
+     * Check that there is at least one spot free on every day between from and to
+     *
+     * @throws InvalidArgumentException
+     */
+    public static function checkDatesAreFree(Carbon $from, Carbon $to): bool
+    {
+        // startOfDay is used as time is inconsequential since bookings are for days not hours
+        throw_if(
+            $to->startOfDay()
+                ->greaterThan(
+                    $from->startOfDay()
+                ),
+            new InvalidArgumentException('$to cannot be greater than $from')
+        );
+
+        foreach(CarbonPeriod::between($from, $to)->days() as $_day) {
+            if(
+                Booking::query()
+                    ->where('from', '<=', $_day)
+                    ->where('to', '>=', $_day)
+                    ->count()
+                    >=
+                    config('app.settings.parking_spaces')
+            ) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

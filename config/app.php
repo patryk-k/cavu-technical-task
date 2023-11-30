@@ -183,4 +183,8 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+
+    'settings' => [
+        'parking_spaces' => 10
+    ]
 ];

@@ -14,8 +14,6 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request): Booking
     {
-        // TODO: Add free space checks
-
         $booking = new Booking($request->validated());
         $booking->save();
 
@@ -29,7 +27,6 @@ class BookingController extends Controller
     public function update(UpdateBookingRequest $request, Booking $booking): Booking
     {
         // TODO: make sure the token is for the given booking
-        // TODO: Add free space checks
 
         $booking->fill($request->validated());
         $booking->save();
