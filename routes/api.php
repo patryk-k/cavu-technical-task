@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\BookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('booking', [BookingController::class, 'store'])->name('booking.store');
+
+Route::middleware('auth:sanctum')
+    ->prefix('booking/{booking}')
+    ->name('booking.')
+    ->group(function () {
+        Route::put('', [BookingController::class, 'update'])->name('update');
+        Route::delete('', [BookingController::class, 'destroy'])->name('destroy');
+    });
