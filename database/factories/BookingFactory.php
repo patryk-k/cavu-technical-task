@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Booking;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
 
@@ -22,7 +23,7 @@ class BookingFactory extends Factory
         return [
             'from' => $from->format('Y-m-d'),
             'to' => $this->faker->dateTimeBetween($from, $from->addMonth())->format('Y-m-d'),
-            'reg_plate' => $this->faker->regexify('[A-Z]{2}[0-9]{2} [A-Z]{3}')
+            'reg_plate' => $this->faker->regexify(Booking::REG_PLATE_REGEX)
         ];
     }
 

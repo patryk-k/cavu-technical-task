@@ -33,6 +33,8 @@ class Booking extends Model
         'to' => 'datetime:Y-m-d',
     ];
 
+    public const REG_PLATE_REGEX = '[A-Z]{2}[0-9]{2} [A-Z]{3}';
+
     /**
      * Check that there is at least one spot free on every day between from and to
      *

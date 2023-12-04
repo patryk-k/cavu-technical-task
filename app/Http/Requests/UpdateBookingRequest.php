@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Booking;
 use App\Rules\BookingDatesFreeRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -37,7 +38,7 @@ class UpdateBookingRequest extends FormRequest
             ],
             'reg_plate' => [
                 'nullable',
-                'regex:[A-Z]{2}[0-9]{2} [A-Z]{3}'
+                'regex:/' . Booking::REG_PLATE_REGEX . '/'
             ]
         ];
     }
