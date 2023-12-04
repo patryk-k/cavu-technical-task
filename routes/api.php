@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('availability', AvailabilityController::class);
+Route::get('availability', AvailabilityController::class)->name('availability');
 
 Route::prefix('booking')
     ->name('booking.')

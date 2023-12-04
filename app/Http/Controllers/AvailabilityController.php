@@ -54,7 +54,7 @@ class AvailabilityController extends Controller
             $dailyData->push((object) [
                 'day' => $_day->format('Y-m-d'),
                 'price' => $price,
-                'freeSpaces' => $freeSpaces
+                'free_spaces' => $freeSpaces
             ]);
 
             if($freeSpaces < $minFreeSpaces) {
