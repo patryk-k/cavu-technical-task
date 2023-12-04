@@ -185,6 +185,22 @@ return [
 
 
     'settings' => [
-        'parking_spaces' => 10
+        'parking_spaces' => 10,
+        'prices' => [
+            'default' => 10.99,
+            'special' => [
+                // from and dates are inclusive
+                (object) [
+                    'from' => '01-01',
+                    'to' => '03-01',
+                    'price' => 9.99
+                ],
+                (object) [
+                    'from' => '06-01',
+                    'to' => '09-01',
+                    'price' => 11.99
+                ]
+            ]
+        ]
     ]
 ];
