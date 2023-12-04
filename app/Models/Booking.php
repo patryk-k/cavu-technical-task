@@ -42,11 +42,11 @@ class Booking extends Model
     {
         // startOfDay is used as time is inconsequential since bookings are for days not hours
         throw_if(
-            $to->startOfDay()
+            $from->startOfDay()
                 ->greaterThan(
-                    $from->startOfDay()
+                    $to->startOfDay()
                 ),
-            new InvalidArgumentException('$to cannot be greater than $from')
+            new InvalidArgumentException('$from cannot be greater than $to')
         );
 
         foreach(CarbonPeriod::between($from, $to)->days() as $_day) {
