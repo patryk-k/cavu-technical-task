@@ -6,7 +6,9 @@ use App\Http\Requests\StoreBookingRequest;
 use App\Http\Requests\UpdateBookingRequest;
 use App\Http\Resources\BookingResource;
 use App\Models\Booking;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 
 class BookingController extends Controller
 {
@@ -15,10 +17,13 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request): BookingResource
     {
+        // TODO: stop allowing multiple reg plates on the same day
+
         $booking = new Booking($request->validated());
         $booking->save();
 
-        $booking->createToken('Booking Token', ['*'], $booking->to->endOfDay());
+        $token = $booking->createToken('Booking Token', ['*'], $booking->to->endOfDay());
+        $booking->token = $token->plainTextToken;
 
         return BookingResource::make($booking->load('tokens'));
     }
@@ -28,7 +33,9 @@ class BookingController extends Controller
      */
     public function update(UpdateBookingRequest $request, Booking $booking): BookingResource
     {
-        // TODO: make sure the token is for the given booking
+        // TODO: stop allowing multiple reg plates on the same day
+
+        $this->authorise($request, $booking);
 
         $booking->fill($request->validated());
         $booking->save();
@@ -43,11 +50,25 @@ class BookingController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Booking $booking): Response
+    public function destroy(Request $request, Booking $booking): Response
     {
-        // TODO: make sure the token is for the given booking
+        $this->authorise($request, $booking);
+
         $booking->delete();
 
         return response()->noContent();
+    }
+
+    /**
+     * Check if token in $request is attached to $booking
+     *
+     * @throws UnauthorizedException
+     */
+    private function authorise(Request $request, Booking $booking): void
+    {
+        // request->user() returns a Booking model object associated with the token used in this request
+        if(!is_a($request->user(), Booking::class) || $request->user()->id != $booking->id) {
+            throw new UnauthorizedException();
+        }
     }
 }

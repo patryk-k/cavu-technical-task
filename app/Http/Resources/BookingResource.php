@@ -14,12 +14,18 @@ class BookingResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
+        $data = [
             'id' => $this->id,
             'from' => $this->from->format('Y-m-d'),
             'to' => $this->to->format('Y-m-d'),
             'reg_plate' => $this->reg_plate,
-            'tokens' => $this->whenLoaded('tokens', BookingTokenResource::collection($this->tokens))
         ];
+
+        // a token is added to a booking object when a booking is created
+        if($this->token) {
+            $data['token'] = $this->token;
+        }
+
+        return $data;
     }
 }
