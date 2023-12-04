@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Carbon\CarbonPeriod;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
+use Laravel\Sanctum\PersonalAccessToken;
 
 /**
+ * @property-read Collection<int, PersonalAccessToken>|null $tokens
  * @property-read int|null $id
  * @property Carbon|null $from
  * @property Carbon|null $to
@@ -34,6 +37,18 @@ class Booking extends Model
     ];
 
     public const REG_PLATE_REGEX = '[A-Z]{2}[0-9]{2} [A-Z]{3}';
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Booking $booking) {
+            foreach($booking->tokens as $_token) {
+                $_token->delete();
+            }
+        });
+    }
 
     /**
      * Check that there is at least one spot free on every day between from and to
