@@ -27,7 +27,6 @@ class BookingDatesFreeRule implements DataAwareRule, ValidationRule
          * index in $data with the to date
          */
         protected string $toField = 'to',
-
         protected Booking|null $booking = null
     ) {
     }
