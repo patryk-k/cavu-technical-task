@@ -17,8 +17,6 @@ class BookingController extends Controller
      */
     public function store(StoreBookingRequest $request): BookingResource
     {
-        // TODO: stop allowing multiple reg plates on the same day
-
         $booking = new Booking($request->validated());
         $booking->save();
 
@@ -33,8 +31,6 @@ class BookingController extends Controller
      */
     public function update(UpdateBookingRequest $request, Booking $booking): BookingResource
     {
-        // TODO: stop allowing multiple reg plates on the same day
-
         $this->authorise($request, $booking);
 
         $booking->fill($request->validated());

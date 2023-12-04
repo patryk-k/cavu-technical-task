@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Carbon;
 
-class BookingDatesFreeRule implements DataAwareRule, ValidationRule
+class BookingDatesUniqueRule implements DataAwareRule, ValidationRule
 {
     /**
      * All of the data under validation.
@@ -32,6 +32,11 @@ class BookingDatesFreeRule implements DataAwareRule, ValidationRule
          * index in $data with the to date
          */
         protected string $toField = 'to',
+
+        /**
+         * index in $data with the reg plate
+         */
+        protected string $regPlateField = 'reg_plate',
     ) {
     }
 
@@ -44,12 +49,13 @@ class BookingDatesFreeRule implements DataAwareRule, ValidationRule
     {
         $from = Carbon::parse($this->data[$this->fromField] ?? $this->booking?->from);
         $to = Carbon::parse($this->data[$this->toField] ?? $this->booking?->to);
+        $regPlate = $this->data[$this->regPlateField] ?? $this->booking?->reg_plate;
 
-        if (!Booking::checkDatesAreFree($from, $to)) {
+        if(Booking::query()->where('reg_plate', $regPlate)->where('from', $from)->where('to', $to)->exists()) {
             $from = $from->format('jS F Y');
             $to = $to->format('jS F Y');
 
-            $message = 'There are not enough free parking spaces available ';
+            $message = 'A car with a registration plate of ' . $regPlate . ' already has a booking to park ';
 
             if($from === $to) {
                 $fail($message . 'on ' . $from);

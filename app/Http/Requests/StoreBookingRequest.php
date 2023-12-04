@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Booking;
 use App\Rules\BookingDatesFreeRule;
+use App\Rules\BookingDatesUniqueRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBookingRequest extends FormRequest
@@ -28,7 +29,8 @@ class StoreBookingRequest extends FormRequest
                 'required',
                 'date',
                 'after_or_equal:today',
-                new BookingDatesFreeRule()
+                new BookingDatesFreeRule(),
+                new BookingDatesUniqueRule()
             ],
             'to' => [
                 'required',
