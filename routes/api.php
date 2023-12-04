@@ -17,12 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('availability', AvailabilityController::class);
 
-Route::post('booking', [BookingController::class, 'store'])->name('booking.store');
-
-Route::middleware('auth:sanctum')
-    ->prefix('booking/{booking}')
+Route::prefix('booking')
     ->name('booking.')
     ->group(function () {
-        Route::put('', [BookingController::class, 'update'])->name('update');
-        Route::delete('', [BookingController::class, 'destroy'])->name('destroy');
+        Route::post('', [BookingController::class, 'store'])->name('store');
+
+        Route::middleware('auth:sanctum')
+            ->prefix('{booking}')
+            ->group(function () {
+                Route::put('', [BookingController::class, 'update'])->name('update');
+                Route::delete('', [BookingController::class, 'destroy'])->name('destroy');
+            });
     });
