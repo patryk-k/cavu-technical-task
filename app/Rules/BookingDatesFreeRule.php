@@ -26,7 +26,9 @@ class BookingDatesFreeRule implements DataAwareRule, ValidationRule
         /**
          * index in $data with the to date
          */
-        protected string $toField = 'to'
+        protected string $toField = 'to',
+
+        protected Booking|null $booking = null
     ) {
     }
 
@@ -37,8 +39,8 @@ class BookingDatesFreeRule implements DataAwareRule, ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $from = Carbon::parse($this->data[$this->fromField]);
-        $to = Carbon::parse($this->data[$this->toField]);
+        $from = Carbon::parse($this->data[$this->fromField] ?? $this->booking?->from);
+        $to = Carbon::parse($this->data[$this->toField] ?? $this->booking?->to);
 
         if (!Booking::checkDatesAreFree($from, $to)) {
             $from = $from->format('jS F Y');

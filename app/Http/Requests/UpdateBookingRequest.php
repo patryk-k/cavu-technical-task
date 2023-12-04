@@ -28,13 +28,13 @@ class UpdateBookingRequest extends FormRequest
                 'nullable',
                 'date',
                 'after_or_equal:today',
-                new BookingDatesFreeRule()
+                new BookingDatesFreeRule('from', 'to', $this->route('booking'))
             ],
             'to' => [
                 'nullable',
                 'date',
                 'after_or_equal:' . (request()->has('from') ? 'from' : request()->route('booking')->from),
-                new BookingDatesFreeRule()
+                new BookingDatesFreeRule('from', 'to', $this->route('booking'))
             ],
             'reg_plate' => [
                 'nullable',
