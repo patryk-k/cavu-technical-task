@@ -18,7 +18,7 @@ class BookingController extends Controller
         $booking = new Booking($request->validated());
         $booking->save();
 
-        // TODO: add token creation
+        $booking->createToken('Booking Token', ['*'], $booking->to->endOfDay());
 
         return BookingResource::make($booking->load('tokens'));
     }
@@ -32,6 +32,10 @@ class BookingController extends Controller
 
         $booking->fill($request->validated());
         $booking->save();
+
+        $token = $booking->tokens()->first();
+        $token->expires_at = $booking->to;
+        $token->save();
 
         return BookingResource::make($booking->load('tokens'));
     }

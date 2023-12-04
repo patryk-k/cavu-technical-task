@@ -15,7 +15,8 @@ class BookingTokenResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'token' => $this->token
+            'token' => $this->token,
+            'expires_at' => $this->expires_at
         ];
     }
 }
