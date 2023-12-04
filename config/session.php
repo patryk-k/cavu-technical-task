@@ -1,5 +1,3 @@
-
-41c4446
 <?php
 use Illuminate\Support\Str;
 
